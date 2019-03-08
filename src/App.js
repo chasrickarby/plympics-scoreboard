@@ -1,27 +1,43 @@
 import React, { Component } from 'react';
+import ActionCable from 'actioncable'
 import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  state = { text: '' }
+
+  handleReceiveNewText = ({ text }) => {
+    if (text !== this.state.text) {
+      this.setState({ text })
+    }
+  }
+
+  componentDidMount() {
+    window.fetch('http://localhost:3001/teams/1').then(data => {
+      data.json().then(res => {
+        this.setState({ text: res.total })
+      })
+    })
+
+    const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
+    this.sub = cable.subscriptions.create('TeamsChannel', {
+      received: this.handleReceiveNewText
+    })
+    debugger;
+  }
+
+  handleChange = e => {
+    this.setState({ text: e.target.value })
+    this.sub.send({ text: e.target.value, id: 1 })
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <textarea
+        value={this.state.text}
+        onChange={this.handleChange}
+      />
+    )
   }
 }
 
