@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from "firebase";
+import posed, { PoseGroup } from "react-pose";
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
   TableHeader,
@@ -7,6 +8,8 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+
+import './ScoreBoardRow.css'
 
 class ScoreBoard extends Component {
 
@@ -33,19 +36,15 @@ class ScoreBoard extends Component {
   render() {
     var totalScore = 0;
     return (
-      <MuiThemeProvider>
-        <TableRow>
-          <TableRowColumn>{this.state.teamName}</TableRowColumn>
-          {
-            Object.keys(this.state.teamData).map((score, i) => {
-              totalScore += this.state.teamData[score];
-              return <TableRowColumn key={this.state.teamName + "-" + i}>{this.state.teamData[score]}</TableRowColumn>
-            })
-          }
-          <TableRowColumn>{totalScore}</TableRowColumn>
-        </TableRow>
-      </MuiThemeProvider>
-
+      <TableRow>
+        <TableRowColumn>{this.state.teamName}</TableRowColumn>
+        {
+          Object.keys(this.state.teamData).map((score, i) => {
+            totalScore += this.state.teamData[score];
+            return <TableRowColumn key={this.state.teamName + "-" + i}>{this.state.teamData[score]}</TableRowColumn>
+          })
+        }
+      </TableRow>
     );
   }
 }

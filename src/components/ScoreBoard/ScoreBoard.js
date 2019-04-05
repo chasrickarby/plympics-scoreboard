@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from "firebase";
+import posed, { PoseGroup } from "react-pose";
 import ScoreBoardRow from '../ScoreBoardRow/ScoreBoardRow'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
@@ -10,6 +11,13 @@ import {
   TableRow,
 } from 'material-ui/Table';
 
+import './ScoreBoard.css'
+
+const Item = posed.li({
+  enter: { opacity: 1 },
+  exit: { opacity: 0 }
+});
+
 class ScoreBoard extends Component {
 
   constructor(props) {
@@ -19,16 +27,36 @@ class ScoreBoard extends Component {
       database: database,
       teams: {},
       events: [],
-      teamsAndEvents: {}
     }
 
     var firebaseRef = firebase.database().ref('2019');
     firebaseRef.once('value')
       .then((dataSnapshot) => {
         var teamsAndEvents = dataSnapshot.val();
-        this.setState({teams: teamsAndEvents.hasOwnProperty("Teams") ? teamsAndEvents["Teams"] : {} });
+        if(teamsAndEvents.hasOwnProperty("Teams")){
+          this.setState({teams: this.sortByTopScore(teamsAndEvents["Teams"])});
+        }
         this.setState({events: teamsAndEvents.hasOwnProperty("Events") ? teamsAndEvents["Events"] : [] });
        });
+  }
+
+  componentDidMount() {
+    var teamsRef = firebase.database().ref('2019/Teams');
+    teamsRef.on("value", (snapshot) => {
+      var teams = snapshot.val();
+      this.setState({teams: this.sortByTopScore(teams)});
+    });
+  }
+
+  sortByTopScore(teams) {
+    var keys = Object.keys(teams);
+    var values = Object.values(teams);
+    var ordered = keys.map((e, i) => [e, values[i]]).sort((a,b) => {return b[1]["Total"] - a[1]["Total"]})
+    var sortedObject = ordered.reduce(function(p, c) {
+         p[c[0]] = c[1];
+         return p;
+    }, {});
+    return sortedObject;
   }
 
   render() {
@@ -36,27 +64,37 @@ class ScoreBoard extends Component {
     console.log(this.state.events);
     return (
       <MuiThemeProvider>
-        <Table>
-          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            <TableRow>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              {
-                this.state.events.map((event) => {
-                  return <TableHeaderColumn key={event}>{event}</TableHeaderColumn>
-                })
-              }
-              <TableHeaderColumn>Total Score</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {
-              Object.keys(this.state.teams).map(team =>
-                <ScoreBoardRow key={team} teamName={team} teamData={this.state.teams[team]}/>
+        <TableRow>
+          <TableHeaderColumn>Name</TableHeaderColumn>
+          {
+            this.state.events.map((event) => {
+              return <TableHeaderColumn key={event}>{event}</TableHeaderColumn>
+            })
+          }
+          <TableHeaderColumn>Total Score</TableHeaderColumn>
+        </TableRow>
+        <ul className="scoreBoardBody">
+        <PoseGroup>
+          {
+            this.state.teams !== {} ?
+              Object.keys(this.state.teams).map((team) =>
+                <Item key={"item-" + team}>
+                  <TableRow style={{visibility: "hidden", height: 0}}>
+                    <TableHeaderColumn style={{ height: 'auto !important' }}>Name</TableHeaderColumn>
+                    {
+                      this.state.events.map((event) => {
+                        return <TableHeaderColumn style={{ height: 'auto !important' }} key={event}>{event}</TableHeaderColumn>
+                      })
+                    }
+                    <TableHeaderColumn style={{ height: 'auto !important' }}>Total Score</TableHeaderColumn>
+                  </TableRow>
+                  <ScoreBoardRow key={"row-" + team} teamName={team} teamData={this.state.teams[team]}/>
+                </Item>
               )
-            }
-
-          </TableBody>
-        </Table>
+              : ""
+          }
+        </PoseGroup>
+        </ul>
       </MuiThemeProvider>
     );
   }
