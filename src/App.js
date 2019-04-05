@@ -1,43 +1,30 @@
 import React, { Component } from 'react';
-import ActionCable from 'actioncable'
-import logo from './logo.svg';
 import './App.css';
+import firebase from "firebase";
+import ScoreBoard from './components/ScoreBoard/ScoreBoard'
 
 class App extends Component {
-  state = { text: '' }
 
-  handleReceiveNewText = ({ text }) => {
-    if (text !== this.state.text) {
-      this.setState({ text })
+  constructor(props) {
+    super(props);
+    var database = firebase.database();
+    this.state = {
+      database: database
     }
-  }
 
-  componentDidMount() {
-    window.fetch('http://localhost:3001/teams/1').then(data => {
-      data.json().then(res => {
-        this.setState({ text: res.total })
-      })
-    })
-
-    const cable = ActionCable.createConsumer('ws://localhost:3001/cable')
-    this.sub = cable.subscriptions.create('TeamsChannel', {
-      received: this.handleReceiveNewText
-    })
-    debugger;
-  }
-
-  handleChange = e => {
-    this.setState({ text: e.target.value })
-    this.sub.send({ text: e.target.value, id: 1 })
   }
 
   render() {
     return (
-      <textarea
-        value={this.state.text}
-        onChange={this.handleChange}
-      />
-    )
+      <div className="App">
+        <header className="App-header">
+          <h1>3Plympics Score Board</h1>
+        </header>
+        <div className="score-board">
+          <ScoreBoard className="score-board" />
+        </div>
+      </div>
+    );
   }
 }
 
