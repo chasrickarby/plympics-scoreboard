@@ -65,7 +65,7 @@ class ScoreBoard extends Component {
     return (
       <MuiThemeProvider>
         <TableRow>
-          <TableHeaderColumn>Name</TableHeaderColumn>
+          <TableHeaderColumn>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TableHeaderColumn>
           {
             this.state.events.map((event) => {
               return <TableHeaderColumn key={event}>{event}</TableHeaderColumn>
@@ -80,7 +80,7 @@ class ScoreBoard extends Component {
               Object.keys(this.state.teams).map((team) =>
                 <Item key={"item-" + team}>
                   <TableRow style={{visibility: "hidden", height: 0}}>
-                    <TableHeaderColumn style={{ height: 'auto !important' }}>Name</TableHeaderColumn>
+                    <TableHeaderColumn style={{ height: 'auto !important' }}>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TableHeaderColumn>
                     {
                       this.state.events.map((event) => {
                         return <TableHeaderColumn style={{ height: 'auto !important' }} key={event}>{event}</TableHeaderColumn>
