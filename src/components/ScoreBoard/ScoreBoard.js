@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
+import { Card, CardBody, Row, Col } from 'reactstrap';
 import firebase from "firebase";
 import posed, { PoseGroup } from "react-pose";
 import ScoreBoardRow from '../ScoreBoardRow/ScoreBoardRow'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {
-  Table,
-  TableHeader,
-  TableHeaderColumn,
-  TableBody,
-  TableRow,
-} from 'material-ui/Table';
 
 import './ScoreBoard.css'
 
@@ -62,32 +55,31 @@ class ScoreBoard extends Component {
   render() {
     console.log(this.state.teams);
     console.log(this.state.events);
+
+    var events = [];
+    for (var event in this.state.events)
+    {
+      events.push(<Col key={this.state.events[event]}><strong>{this.state.events[event]}</strong></Col>);
+    }
+
     return (
-      <MuiThemeProvider>
-        <TableRow>
-          <TableHeaderColumn>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TableHeaderColumn>
-          {
-            this.state.events.map((event) => {
-              return <TableHeaderColumn key={event}>{event}</TableHeaderColumn>
-            })
-          }
-          <TableHeaderColumn>Total Score</TableHeaderColumn>
-        </TableRow>
         <ul className="scoreBoardBody">
+        <Card>
+          <CardBody>
+            <Row>
+              <Col><strong>Teams</strong></Col>
+              {
+                events
+              }
+              <Col><strong>Total Score</strong></Col>
+            </Row>
+          </CardBody>
+        </Card>
         <PoseGroup>
           {
             this.state.teams !== {} ?
               Object.keys(this.state.teams).map((team) =>
                 <Item key={"item-" + team}>
-                  <TableRow style={{visibility: "hidden", height: 0}}>
-                    <TableHeaderColumn style={{ height: 'auto !important' }}>Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TableHeaderColumn>
-                    {
-                      this.state.events.map((event) => {
-                        return <TableHeaderColumn style={{ height: 'auto !important' }} key={event}>{event}</TableHeaderColumn>
-                      })
-                    }
-                    <TableHeaderColumn style={{ height: 'auto !important' }}>Total Score</TableHeaderColumn>
-                  </TableRow>
                   <ScoreBoardRow key={"row-" + team} teamName={team} teamData={this.state.teams[team]}/>
                 </Item>
               )
@@ -95,7 +87,6 @@ class ScoreBoard extends Component {
           }
         </PoseGroup>
         </ul>
-      </MuiThemeProvider>
     );
   }
 }
