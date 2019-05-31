@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import firebase from "firebase";
+import ScoreBoard from './components/ScoreBoard/ScoreBoard'
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+    var database = firebase.database();
+    this.state = {
+      database: database
+    }
+
+  }
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <h1>3Plympics Score Board</h1>
         </header>
+        <div className="score-board">
+          <ScoreBoard className="score-board" />
+        </div>
       </div>
     );
   }
