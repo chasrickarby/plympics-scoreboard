@@ -11,11 +11,17 @@ class ScoreBoard extends Component {
     super(props);
     var database = firebase.database();
     this.state = {
-      event_ids: props.event_ids,
-      team_id: props.team_id,
+      event_ids: props.eventIds,
+      team_id: props.teamId,
       teamScores: props.teamScores,
       teamName: props.teamName,
       database: database
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(this.state.event_ids != nextProps.eventIds) {
+      this.setState({event_ids: nextProps.eventIds})
     }
   }
 
@@ -29,10 +35,9 @@ class ScoreBoard extends Component {
     });
   }
 
-  
-
   render() {
     var totalScore = 0;
+    var x = this.state.teamScores.total_score;
     return (
       <Card>
         <CardBody>
@@ -43,7 +48,7 @@ class ScoreBoard extends Component {
                 return this.state.teamScores[this.state.event_ids[id]] ? <Col key={this.state.teamName + "-" + this.state.event_ids[id]}>{this.state.teamScores[this.state.event_ids[id]]}</Col> : <Col key={this.state.teamName + "-" + this.state.event_ids[id]}></Col>
               })
             }
-            <Col>Total Score</Col>
+            <Col>{Object.values(this.state.teamScores).reduce((a,b) => a + b, 0)}</Col>
           </Row>
         </CardBody>
       </Card>

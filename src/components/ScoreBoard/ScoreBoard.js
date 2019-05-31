@@ -36,7 +36,7 @@ class ScoreBoard extends Component {
     var teamsRef = firebase.database().ref('2019/Teams');
     teamsRef.on("value", (snapshot) => {
       var teams = snapshot.val();
-      // this.setState({teams: teams});
+      this.setState({teams: teams});
     });
   }
 
@@ -49,26 +49,29 @@ class ScoreBoard extends Component {
 
   sortByTopScore(teams) {
     teams = this.calculateTopScore(teams);
-    var keys = Object.keys(teams);
-    var values = Object.values(teams);
-    var ordered = keys.map((e, i) => [e, values[i]]).sort((a,b) => {return b[1]["Total"] - a[1]["Total"]})
-    var sortedObject = ordered.reduce(function(p, c) {
-         p[c[0]] = c[1];
-         return p;
-    }, {});
-    return sortedObject;
+    var team_ids = Object.keys(teams);
+    var teamData = Object.values(teams);
+    var ordered = team_ids.map((e, i) => [e, teamData[i]]).sort((a,b) => {return b[1]["scores"]["total_score"] - a[1]["scores"]["total_score"]})
+    // var sortedObject = ordered.reduce(function(p, c) {
+    //      p[c[0]] = c[1];
+    //      return p;
+    // }, {});
+
+    // ["3", {name: x, score: {1: 2}}]
+    // ["1", {name: x, score: {1: 2}}]
+
+    return ordered;
   }
 
   render() {
     console.log("this.state.teams", this.state.teams);
-    console.log("this.state", this.state);
+    console.log("this.state.events", this.state.events);
 
     var events = [];
     for (var event in this.state.events)
     {
       events.push(<Col key={this.state.events[event]["name"]}><strong>{this.state.events[event]["name"]}</strong></Col>);
     }
-
     return (
         <ul className="scoreBoardBody">
         <Card>
@@ -85,9 +88,9 @@ class ScoreBoard extends Component {
         <PoseGroup>
           {
             this.state.teams !== {} ?
-              Object.keys(this.state.teams).map((team_id) =>
-                <Item key={"item-" + team_id}>
-                  <ScoreBoardRow key={"row-" + this.state.teams[team_id]["name"]} teamName={this.state.teams[team_id]["name"]} teamScores={this.state.teams[team_id]["scores"]} event_ids= {Object.keys(this.state.events)} team_id={team_id} />
+              this.sortByTopScore(this.state.teams).map((team_obj) =>
+                <Item key={"item-" + team_obj[0]}>
+                  <ScoreBoardRow key={"row-" + team_obj[1]["name"]} teamName={team_obj[1]["name"]} teamScores={team_obj[1]["scores"]} eventIds={Object.keys(this.state.events)} teamId={team_obj[0]} />
                 </Item>
               )
               : ""
