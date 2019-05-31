@@ -36,11 +36,19 @@ class ScoreBoard extends Component {
     var teamsRef = firebase.database().ref('2019/Teams');
     teamsRef.on("value", (snapshot) => {
       var teams = snapshot.val();
-      // this.setState({teams: this.sortByTopScore(teams)});
+      // this.setState({teams: teams});
     });
   }
 
+  calculateTopScore(teams){
+    for (var id in teams){
+      teams[id]["scores"]["total_score"] = Object.values(teams[id]["scores"]).reduce((a,b) => a + b, 0)
+    }
+    return teams;
+  }
+
   sortByTopScore(teams) {
+    teams = this.calculateTopScore(teams);
     var keys = Object.keys(teams);
     var values = Object.values(teams);
     var ordered = keys.map((e, i) => [e, values[i]]).sort((a,b) => {return b[1]["Total"] - a[1]["Total"]})
