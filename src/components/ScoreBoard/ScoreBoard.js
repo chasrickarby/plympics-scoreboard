@@ -26,27 +26,19 @@ class ScoreBoard extends Component {
     firebaseRef.once('value')
       .then((dataSnapshot) => {
         var teamsAndEvents = dataSnapshot.val();
-        // var events_local = {}
-        // for(var event_id in teamsAndEvents["Events"]){
-        //   if (teamsAndEvents["Events"].hasOwnProperty(event_id)) {
-        //     events_local[event_id] = teamsAndEvents["Events"][event_id]["name"];
-        //   }
-        // }
-        // console.log(events_local);
-        // this.setState({ events: events_local });
         this.setState({ events: teamsAndEvents["Events"]})
         this.setState({ teams: teamsAndEvents["Teams"]})
        });
   }
 
   // When updates happen to firebase, this updates state
-  // componentDidMount() {
-  //   var teamsRef = firebase.database().ref('2019/Teams');
-  //   teamsRef.on("value", (snapshot) => {
-  //     var teams = snapshot.val();
-  //     // this.setState({teams: this.sortByTopScore(teams)});
-  //   });
-  // }
+  componentDidMount() {
+    var teamsRef = firebase.database().ref('2019/Teams');
+    teamsRef.on("value", (snapshot) => {
+      var teams = snapshot.val();
+      // this.setState({teams: this.sortByTopScore(teams)});
+    });
+  }
 
   sortByTopScore(teams) {
     var keys = Object.keys(teams);
@@ -87,7 +79,7 @@ class ScoreBoard extends Component {
             this.state.teams !== {} ?
               Object.keys(this.state.teams).map((team_id) =>
                 <Item key={"item-" + team_id}>
-                  <ScoreBoardRow key={"row-" + this.state.teams[team_id]["name"]} teamName={this.state.teams[team_id]["name"]} teamData={this.state.teams[team_id]["scores"]} event_ids= {Object.keys(this.state.events)} />
+                  <ScoreBoardRow key={"row-" + this.state.teams[team_id]["name"]} teamName={this.state.teams[team_id]["name"]} teamScores={this.state.teams[team_id]["scores"]} event_ids= {Object.keys(this.state.events)} team_id={team_id} />
                 </Item>
               )
               : ""
