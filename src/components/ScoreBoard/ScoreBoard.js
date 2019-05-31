@@ -19,27 +19,34 @@ class ScoreBoard extends Component {
     this.state = {
       database: database,
       teams: {},
-      events: [],
+      events: {},
     }
 
     var firebaseRef = firebase.database().ref('2019');
     firebaseRef.once('value')
       .then((dataSnapshot) => {
         var teamsAndEvents = dataSnapshot.val();
-        if(teamsAndEvents.hasOwnProperty("Teams")){
-          this.setState({teams: this.sortByTopScore(teamsAndEvents["Teams"])});
-        }
-        this.setState({events: teamsAndEvents.hasOwnProperty("Events") ? teamsAndEvents["Events"] : [] });
+        // var events_local = {}
+        // for(var event_id in teamsAndEvents["Events"]){
+        //   if (teamsAndEvents["Events"].hasOwnProperty(event_id)) {
+        //     events_local[event_id] = teamsAndEvents["Events"][event_id]["name"];
+        //   }
+        // }
+        // console.log(events_local);
+        // this.setState({ events: events_local });
+        this.setState({ events: teamsAndEvents["Events"]})
+        this.setState({ teams: teamsAndEvents["Teams"]})
        });
   }
 
-  componentDidMount() {
-    var teamsRef = firebase.database().ref('2019/Teams');
-    teamsRef.on("value", (snapshot) => {
-      var teams = snapshot.val();
-      this.setState({teams: this.sortByTopScore(teams)});
-    });
-  }
+  // When updates happen to firebase, this updates state
+  // componentDidMount() {
+  //   var teamsRef = firebase.database().ref('2019/Teams');
+  //   teamsRef.on("value", (snapshot) => {
+  //     var teams = snapshot.val();
+  //     // this.setState({teams: this.sortByTopScore(teams)});
+  //   });
+  // }
 
   sortByTopScore(teams) {
     var keys = Object.keys(teams);
@@ -53,13 +60,13 @@ class ScoreBoard extends Component {
   }
 
   render() {
-    console.log(this.state.teams);
-    console.log(this.state.events);
+    console.log("this.state.teams", this.state.teams);
+    console.log("this.state", this.state);
 
     var events = [];
     for (var event in this.state.events)
     {
-      events.push(<Col key={this.state.events[event]}><strong>{this.state.events[event]}</strong></Col>);
+      events.push(<Col key={this.state.events[event]["name"]}><strong>{this.state.events[event]["name"]}</strong></Col>);
     }
 
     return (
@@ -78,9 +85,9 @@ class ScoreBoard extends Component {
         <PoseGroup>
           {
             this.state.teams !== {} ?
-              Object.keys(this.state.teams).map((team) =>
-                <Item key={"item-" + team}>
-                  <ScoreBoardRow key={"row-" + team} teamName={team} teamData={this.state.teams[team]}/>
+              Object.keys(this.state.teams).map((team_id) =>
+                <Item key={"item-" + team_id}>
+                  <ScoreBoardRow key={"row-" + this.state.teams[team_id]["name"]} teamName={this.state.teams[team_id]["name"]} teamData={this.state.teams[team_id]["scores"]} event_ids= {Object.keys(this.state.events)} />
                 </Item>
               )
               : ""

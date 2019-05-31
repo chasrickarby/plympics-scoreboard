@@ -11,6 +11,7 @@ class ScoreBoard extends Component {
     super(props);
     var database = firebase.database();
     this.state = {
+      event_ids: props.event_ids,
       teamData: props.teamData,
       teamName: props.teamName,
       database: database
@@ -18,13 +19,13 @@ class ScoreBoard extends Component {
   }
 
   componentDidMount() {
-    var teamRef = firebase.database().ref('2019/Teams/' + this.state.teamName);
-    teamRef.on("value", (snapshot) => {
-      var team = snapshot.val();
-      this.setState({
-        teamData: team
-      });
-    });
+    // var teamRef = firebase.database().ref('2019/Teams/' + this.state.teamName);
+    // teamRef.on("value", (snapshot) => {
+    //   var team = snapshot.val();
+    //   this.setState({
+    //     teamData: team
+    //   });
+    // });
   }
 
   render() {
@@ -35,9 +36,8 @@ class ScoreBoard extends Component {
           <Row>
             <Col>{this.state.teamName}</Col>
             {
-              Object.keys(this.state.teamData).map((score, i) => {
-                totalScore += this.state.teamData[score];
-                return <Col key={this.state.teamName + "-" + i}>{this.state.teamData[score]}</Col>
+              Object.keys(this.state.event_ids).map((id) => {
+                return this.state.teamData[this.state.event_ids[id]] ? <Col key={this.state.teamName + "-" + this.state.event_ids[id]}>{this.state.teamData[this.state.event_ids[id]]}</Col> : <Col key={this.state.teamName + "-" + this.state.event_ids[id]}></Col>
               })
             }
           </Row>
