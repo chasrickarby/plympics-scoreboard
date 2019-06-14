@@ -1,10 +1,16 @@
 var index = 0;
 var imagesArray = ["images/keanu.gif",
                    "images/doggo.gif",
+                   "images/snugz.gif",
                    "images/cannot.gif",
                    "images/winning.gif",
-                   "images/rick.gif",
+                   "images/shia.gif",
+                   "images/booty.gif",
                    "images/rekt.gif",
+                   "images/wiggle.gif",
+                   "images/rick.gif",
+                   "images/excite.gif",
+                   "images/birthdaysmash.gif",
                    "images/gurl.gif"];
 var background1 = $("#background1"),
     background2 = $("#background2");
