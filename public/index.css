@@ -1,0 +1,26 @@
+#root {
+  font-family: 'Comic Sans MS', arial !important;
+}
+
+#background2{
+  background: url('images/gurl.gif');
+}
+
+.header-rainbow{
+color: white !important;
+background: red !important; /* For browsers that do not support gradients */
+background: -webkit-linear-gradient(left, red, orange , yellow, green, cyan, blue, violet) !important; /* For Safari 5.1 to 6.0 */
+background: -o-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet)!important; /* For Opera 11.1 to 12.0 */
+background: -moz-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet) !important; /* For Firefox 3.6 to 15 */
+background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet) !important; /* Standard syntax (must be last) */
+font-weight:bolder;
+}
+
+.titlerow{
+  background: -webkit-linear-gradient(left, red, orange , yellow, green, cyan, blue, violet) !important; /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet)!important; /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet) !important; /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet) !important; /* Standard syntax (must be last) */
+}
+
+ * {cursor: url(http://cur.cursors-4u.net/nature/nat-10/nat927.ani), url(http://cur.cursors-4u.net/nature/nat-10/nat927.png), auto !important;} 
