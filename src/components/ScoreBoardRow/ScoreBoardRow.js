@@ -26,7 +26,8 @@ class ScoreBoard extends Component {
   }
 
   componentDidMount() {
-    var teamRef = firebase.database().ref('2019/Teams/' + this.state.team_id + "/scores");
+    var currentYear = new Date().getFullYear().toString();
+    var teamRef = firebase.database().ref(currentYear + '/Teams/' + this.state.team_id + "/scores");
     teamRef.on("value", (snapshot) => {
       var scores = snapshot.val();
       this.setState({
@@ -36,8 +37,10 @@ class ScoreBoard extends Component {
   }
 
   render() {
-    var totalScore = 0;
-    var x = this.state.teamScores.total_score;
+    if (!this.state.teamScores){
+      this.state.teamScores = {}
+    }
+
     return (
       <Card>
         <CardBody>

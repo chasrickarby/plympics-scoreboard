@@ -21,8 +21,8 @@ class ScoreBoard extends Component {
       teams: {},
       events: {},
     }
-
-    var firebaseRef = firebase.database().ref('2019');
+    var currentYear = new Date().getFullYear().toString();
+    var firebaseRef = firebase.database().ref(currentYear);
     firebaseRef.once('value')
       .then((dataSnapshot) => {
         var teamsAndEvents = dataSnapshot.val();
@@ -33,7 +33,8 @@ class ScoreBoard extends Component {
 
   // When updates happen to firebase, this updates state
   componentDidMount() {
-    var teamsRef = firebase.database().ref('2019/Teams');
+    var currentYear = new Date().getFullYear().toString();
+    var teamsRef = firebase.database().ref(currentYear + '/Teams');
     teamsRef.on("value", (snapshot) => {
       var teams = snapshot.val();
       this.setState({teams: teams});
@@ -42,7 +43,12 @@ class ScoreBoard extends Component {
 
   calculateTopScore(teams){
     for (var id in teams){
-      teams[id]["scores"]["total_score"] = Object.values(teams[id]["scores"]).reduce((a,b) => a + b, 0)
+      if (teams[id]["scores"]) {
+        teams[id]["scores"]["total_score"] = Object.values(teams[id]["scores"]).reduce((a,b) => a + b, 0);
+      } else {
+        teams[id]["scores"] = {};
+        teams[id]["scores"]["total_score"] = 0;
+      }
     }
     return teams;
   }
@@ -66,7 +72,7 @@ class ScoreBoard extends Component {
   render() {
     console.log("this.state.teams", this.state.teams);
     console.log("this.state.events", this.state.events);
-
+    debugger;
     var events = [];
     for (var event in this.state.events)
     {
