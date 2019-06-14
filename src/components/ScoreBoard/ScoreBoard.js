@@ -39,6 +39,12 @@ class ScoreBoard extends Component {
       var teams = snapshot.val();
       this.setState({teams: teams});
     });
+
+    var eventsRef = firebase.database().ref(currentYear + '/Events');
+    eventsRef.on("value", (snapshot) => {
+      var events = snapshot.val();
+      this.setState({events: events});
+    });
   }
 
   calculateTopScore(teams){
@@ -72,7 +78,6 @@ class ScoreBoard extends Component {
   render() {
     console.log("this.state.teams", this.state.teams);
     console.log("this.state.events", this.state.events);
-    debugger;
     var events = [];
     for (var event in this.state.events)
     {
