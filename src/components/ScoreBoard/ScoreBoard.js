@@ -86,7 +86,7 @@ class ScoreBoard extends Component {
     return (
         <ul className="scoreBoardBody">
         <Card>
-          <CardBody>
+          <CardBody className="titlerow">
             <Row>
               <Col><strong>Teams</strong></Col>
               {

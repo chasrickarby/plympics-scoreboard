@@ -18,7 +18,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1>3Plympics Score Board</h1>
+          <h1 className="header-rainbow">3Plympics Score Board</h1>
         </header>
         <div className="score-board">
           <ScoreBoard className="score-board" />
